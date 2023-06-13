@@ -13,7 +13,7 @@ program
   .argument('<filepath1>', 'path to the file 1 to compare')
   .argument('<filepath2>', 'path to the file 2 to compare')
   .action((filepath1, filepath2) => {
-    compareTwoFiles(filepath1, filepath2)
+    compareTwoFiles(filepath1, filepath2);
   });
 
 program.parse();

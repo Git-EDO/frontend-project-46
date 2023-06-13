@@ -1,53 +1,53 @@
 import path from 'node:path';
 import { readFileSync } from 'node:fs';
 
-const getAbsolutePathToFile = (filepath) => path.resolve(process.cwd(), filepath);
-
 const getFileData = (filepath) => {
-    const absolutePath = getAbsolutePathToFile(filepath);
-    return readFileSync(absolutePath, 'utf-8');
+  try {
+    const absolutePath = path.resolve(process.cwd(), filepath);
+    const fileData = readFileSync(absolutePath, 'utf-8');
+    return JSON.parse(fileData);
+  } catch (e) {
+    throw new Error(`File is not found: ${filepath}`)
+  }
 };
 
 const formatJSONAsString = (object) => {
-    let result = '{\n';
-    const paddingSize = 2;
-    const padding = ' '.repeat(paddingSize);
+  const paddingSize = 2;
+  const padding = ' '.repeat(paddingSize);
+  const entries = Object.entries(object);
 
-    const entries = Object.entries(object)
+  const result = entries.reduce((acc, [key, value]) => {
+    const formattedKey = key.replace(/^[+-]/, '');
+    const prefix = key.startsWith('-') ? '-' : '+';
 
-    for (const [key, value] of entries) {
-        const formattedKey = key.replace(/^[+-]/, '');
-        const prefix = key.startsWith('-') ? '-' : '+';
+    acc = `${acc}${padding}${key.startsWith(' ') ? '' : prefix} ${formattedKey}: ${value}\n`;
+    return acc
+  }, '{\n');
 
-        result += `${padding}${key.startsWith(' ') ? '' :prefix} ${formattedKey}: ${value}\n`
-    }
-    result += '}'
-
-    return result
-}
+  return result + '}';
+};
 
 export const compareTwoFiles = (fileData1, fileData2) => {
-    const file1 = JSON.parse(getFileData(fileData1))
-    const file2 = JSON.parse(getFileData(fileData2))
+  const file1 = getFileData(fileData1);
+  const file2 = getFileData(fileData2);
 
-    const result = {}
-    const keys1 = Object.keys(file1)
-    const keys2 = Object.keys(file2)
-    const keys = Array.from(new Set([...keys1, ...keys2])).sort()
-    for(const key of keys) {
-        if(file1.hasOwnProperty(key) && file2.hasOwnProperty(key)) {
-            if(file1[key] === file2[key]) {
-                result['  ' + key] = file1[key]
-            } else {
-                result["- " + key] = file1[key]
-                result["+ " + key] = file2[key]
-            }
-        } else if(!file1.hasOwnProperty(key) && file2.hasOwnProperty(key)) {
-            result['+ ' + key] = file2[key]
-        } else if(file1.hasOwnProperty(key) && !file2.hasOwnProperty(key)) {
-            result['- ' + key] = file1[key]
+  const result = {};
+  const keys = Array.from(new Set([...Object.keys(file1), ...Object.keys(file2)])).sort();
+  keys.forEach(key => {
+    if (Object.hasOwn(file1, key) && Object.hasOwn(file2, key)) {
+        if (file1[key] === file2[key]) {
+          result[`  ${key}`] = file1[key];
+        } else {
+          result[`- ${key}`] = file1[key];
+          result[`+ ${key}`] = file2[key];
         }
-    }
-    console.log(formatJSONAsString(result))
-    return result
-}
+      } else if (!Object.hasOwn(file1, key) && Object.hasOwn(file2, key)) {
+        result[`+ ${key}`] = file2[key];
+      } else if (Object.hasOwn(file1, key) && !Object.hasOwn(file2, key)) {
+        result[`- ${key}`] = file1[key];
+      }
+  })
+
+  console.log(formatJSONAsString(result))
+  return formatJSONAsString(result);
+};

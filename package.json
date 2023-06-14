@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0",
   "description": "[![Actions Status](https://github.com/Git-EDO/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/Git-EDO/frontend-project-46/actions)",
-  "main": "index.js",
+  "main": "bin/gendiff.js",
   "scripts": {
     "test": "jest"
   },

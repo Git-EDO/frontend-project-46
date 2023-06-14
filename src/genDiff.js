@@ -24,7 +24,7 @@ const formatJSONAsString = (object) => {
     return acc;
   }, '{\n');
 
-  return result + '}';
+  return `${result}}`;
 };
 
 const compareTwoFiles = (fileData1, fileData2) => {

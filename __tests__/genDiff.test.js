@@ -1,5 +1,5 @@
+import { test, expect } from '@jest/globals';
 import compareTwoFiles from '../src/genDiff.js';
-import { test, expect } from 'jest';
 
 test('if argument file is doesnt exist', () => {
   expect(() => compareTwoFiles('assets/file1.json', 'assets/file22.json')).toThrow(

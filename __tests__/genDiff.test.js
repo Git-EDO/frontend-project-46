@@ -1,4 +1,4 @@
-import { compareTwoFiles } from '../src/genDiff.js';
+import compareTwoFiles from '../src/genDiff.js';
 import { test, expect } from 'jest';
 
 test('if argument file is doesnt exist', () => {

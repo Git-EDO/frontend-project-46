@@ -9,3 +9,6 @@ gendiff:
 
 lint:
 	npx eslint . --fix
+
+test-coverage:
+	npx jest --coverage

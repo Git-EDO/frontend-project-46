@@ -7,8 +7,25 @@ test('if argument file is doesnt exist', () => {
   );
 });
 
-test('compare files from assets', () => {
+test('if file extension is unsupported', () => {
+  expect(() => compareTwoFiles('assets/file1.js', 'assets/file22.json')).toThrow('".js" is unsupported extension');
+});
+
+test('compare .json files from assets', () => {
   expect(compareTwoFiles('assets/file1.json', 'assets/file2.json')).toEqual(
+    `{
+  -  follow: false
+     host: hexlet.io
+  -  proxy: 123.234.53.22
+  -  timeout: 50
+  +  timeout: 20
+  +  verbose: true
+}`,
+  );
+});
+
+test('compare .yaml files from assets', () => {
+  expect(compareTwoFiles('assets/file1.yaml', 'assets/file2.yaml')).toEqual(
     `{
   -  follow: false
      host: hexlet.io

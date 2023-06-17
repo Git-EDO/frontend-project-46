@@ -1,15 +1,4 @@
-import path from 'node:path';
-import { readFileSync } from 'node:fs';
-
-const getFileData = (filepath) => {
-  try {
-    const absolutePath = path.resolve(process.cwd(), filepath);
-    const fileData = readFileSync(absolutePath, 'utf-8');
-    return JSON.parse(fileData);
-  } catch (e) {
-    throw new Error(`File is not found: ${filepath}`);
-  }
-};
+import transformStringToData from './parsers.js';
 
 const formatJSONAsString = (object) => {
   const paddingSize = 2;
@@ -27,9 +16,9 @@ const formatJSONAsString = (object) => {
   return `${result}}`;
 };
 
-const compareTwoFiles = (fileData1, fileData2) => {
-  const file1 = getFileData(fileData1);
-  const file2 = getFileData(fileData2);
+const compareTwoFiles = (filepath1, filepath2) => {
+  const file1 = transformStringToData(filepath1);
+  const file2 = transformStringToData(filepath2);
 
   const result = {};
   const keys = Array.from(new Set([...Object.keys(file1), ...Object.keys(file2)])).sort();

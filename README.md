@@ -18,3 +18,12 @@
 - _**gendiff -h**_ to get help message
 
 [![asciicast](https://asciinema.org/a/nZtd3ksgkXTRtIkMzr5CAkX81.svg)](https://asciinema.org/a/nZtd3ksgkXTRtIkMzr5CAkX81)
+
+## How to use
+
+- _**gendiff filepath1 filepath2**_ to get data
+- "-" before key means that the first file has this data
+- "+" before key means that the second file has this data
+- the absence of the "+" and "-" operators means that the key is present in both files and its value is the same
+
+[![asciicast](https://asciinema.org/a/H2Sfwlo6S2zvuw6oY8Io8HWaK.svg)](https://asciinema.org/a/H2Sfwlo6S2zvuw6oY8Io8HWaK)

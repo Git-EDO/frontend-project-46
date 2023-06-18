@@ -1,18 +1,21 @@
 import { test, expect } from '@jest/globals';
 import compareTwoFiles from '../src/genDiff.js';
 
+const jsonFile1 = '__fixtures__/file1.json';
+const jsonFile2 = '__fixtures__/file2.json';
+const yamlFile1 = '__fixtures__/file1.yaml';
+const yamlFile2 = '__fixtures__/file2.yaml';
+
 test('if argument file is doesnt exist', () => {
-  expect(() => compareTwoFiles('assets/file1.json', 'assets/file22.json')).toThrow(
-    'File is not found: assets/file22.json',
-  );
+  expect(() => compareTwoFiles(jsonFile1, jsonFile2).toThrow('File is not found: __fixtures__/file22.json'));
 });
 
 test('if file extension is unsupported', () => {
-  expect(() => compareTwoFiles('assets/file1.js', 'assets/file22.json')).toThrow('".js" is unsupported extension');
+  expect(() => compareTwoFiles('__fixtures__/file1.js', jsonFile2).toThrow('".js" is unsupported extension'));
 });
 
 test('compare .json files from assets', () => {
-  expect(compareTwoFiles('assets/file1.json', 'assets/file2.json')).toEqual(
+  expect(compareTwoFiles(jsonFile1, jsonFile2)).toEqual(
     `{
   -  follow: false
      host: hexlet.io
@@ -25,7 +28,7 @@ test('compare .json files from assets', () => {
 });
 
 test('compare .yaml files from assets', () => {
-  expect(compareTwoFiles('assets/file1.yaml', 'assets/file2.yaml')).toEqual(
+  expect(compareTwoFiles(yamlFile1, yamlFile2)).toEqual(
     `{
   -  follow: false
      host: hexlet.io

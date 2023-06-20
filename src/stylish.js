@@ -1,6 +1,6 @@
 import isObject from 'lodash/isObject.js';
 
-const stylish = (data, paddingSymbol = ' ', spacesCount = 2) => {
+const stylish = (data, paddingSymbol = ' ', spacesCount = 4) => {
   const stringify = (value, depth) => {
     if (!isObject(value)) {
       return `${value}`;
@@ -22,8 +22,10 @@ const stylish = (data, paddingSymbol = ' ', spacesCount = 2) => {
   };
 
   const iter = (obj, depth) => {
+    const specialSymbolsLength = 2;
     const paddingSize = depth * spacesCount;
-    const currentPadding = paddingSymbol.repeat(paddingSize);
+    const nestedPadding = paddingSymbol.repeat(paddingSize);
+    const currentPadding = paddingSymbol.repeat(paddingSize - specialSymbolsLength);
     const bracketPadding = paddingSymbol.repeat(paddingSize - spacesCount);
 
     const result = obj.reduce((acc, object) => {
@@ -33,9 +35,9 @@ const stylish = (data, paddingSymbol = ' ', spacesCount = 2) => {
         case 'removed':
           return `${acc}${currentPadding}+ ${object.key}: ${stringify(object.value, depth + 1)}\n`;
         case 'nested':
-          return `${acc}${currentPadding}  ${object.key}: ${iter(object.children, depth + 1)}\n`;
+          return `${acc}${nestedPadding}${object.key}: ${iter(object.children, depth + 1)}\n`;
         case 'unchanged':
-          return `${acc}${currentPadding}  ${object.key}: ${stringify(object.value, depth + 1)}\n`;
+          return `${acc}${nestedPadding}${object.key}: ${stringify(object.value, depth + 1)}\n`;
         case 'changed':
           const obj1Value = `${acc}${currentPadding}- ${object.key}: ${stringify(object.values.obj1Value, depth + 1)}`;
           const obj2Value = `${currentPadding}+ ${object.key}: ${stringify(object.values.obj2Value, depth + 1)}`;

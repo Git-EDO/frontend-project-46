@@ -29,7 +29,6 @@ const compareTwoFiles = (filepath1, filepath2) => {
     });
   };
 
-  // console.log(JSON.stringify(iter(file1, file2), null, 2));
   console.log(stylish(iter(file1, file2)));
   return iter(file1, file2);
 };

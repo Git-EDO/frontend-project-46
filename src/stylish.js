@@ -1,40 +1,32 @@
-const stylish = (array, padding = '.', paddingSize = 2) => {
-  const iter = (obj, padSize) => {
+const stylish = (data, paddingSymbol = '.', spacesCount = 2) => {
+  const iter = (obj, depth) => {
+    const paddingSize = depth * spacesCount;
+    const currentPadding = paddingSymbol.repeat(paddingSize);
+    const bracketPadding = paddingSymbol.repeat(paddingSize - spacesCount);
+
     const result = obj.reduce((acc, object) => {
       switch (object.type) {
         case 'saved':
-          return `${acc}${padding.repeat(padSize)}- ${object.key}: ${JSON.stringify(
-            object.value,
-            padding.repeat(padSize),
-            padding,
-          )
-            .replaceAll('"', '')
-            .replaceAll(',', '')}\n`;
+          return `${acc}${currentPadding}- ${object.key}: ${object.value}\n`;
         case 'removed':
-          return `${acc}${padding.repeat(padSize)}+ ${object.key}: ${JSON.stringify(
-            object.value,
-            padding.repeat(padSize),
-            padding,
-          )
-            .replaceAll('"', '')
-            .replaceAll(',', '')}\n`;
+          return `${acc}${currentPadding}+ ${object.key}: ${object.value}\n`;
         case 'nested':
-          return `${acc}${padding.repeat(padSize)}  ${object.key}: ${iter(object.value, padSize * 2)}\n`;
+          return `${acc}${currentPadding}  ${object.key}: ${iter(object.value, depth + 1)}\n`;
         case 'unchanged':
-          return `${acc}${padding.repeat(padSize)}  ${object.key}: ${object.value}\n`;
+          return `${acc}${currentPadding}  ${object.key}: ${object.value}\n`;
         case 'changed':
-          return `${acc}${padding.repeat(padSize)}- ${object.key}: ${object.values.obj1Value}\n${padding.repeat(
-            padSize,
-          )}+ ${object.key}: ${object.values.obj2Value}\n`;
+          const obj1Value = `${acc}${currentPadding}- ${object.key}: ${object.values.obj1Value}`;
+          const obj2Value = `${currentPadding}+ ${object.key}: ${object.values.obj2Value}`;
+          return `${obj1Value}\n${obj2Value}\n`;
         default:
           throw new Error(`"${object.type}" is unsupported type`);
       }
     }, '{\n');
 
-    return `${result}}`;
+    return `${result}${bracketPadding}}`;
   };
 
-  return iter(array, paddingSize);
+  return iter(data, 1);
 };
 
 export default stylish;

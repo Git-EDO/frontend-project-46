@@ -20,7 +20,7 @@ const compareTwoFiles = (filepath1, filepath2) => {
         case !has(data1, key):
           return { key, type: 'removed', value: key2 };
         case isObject(key1) && isObject(key2):
-          return { key, type: 'nested', value: iter(key1, key2) };
+          return { key, type: 'nested', children: iter(key1, key2) };
         case key1 === key2:
           return { key, type: 'unchanged', value: key1 };
         default:

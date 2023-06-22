@@ -1,7 +1,8 @@
 import isObject from 'lodash/isObject.js';
 import has from 'lodash/has.js';
 import transformStringToData from './parsers.js';
-import stylish from './stylish.js';
+import stylish from '../formatters/stylish.js';
+import plain from '../formatters/plain.js';
 
 const getAST = (filedata1, filedata2) => {
   const iter = (data1, data2) => {
@@ -29,7 +30,7 @@ const getAST = (filedata1, filedata2) => {
   return iter(filedata1, filedata2);
 };
 
-const compareTwoFiles = (filepath1, filepath2, formatter) => {
+const gendiff = (filepath1, filepath2, formatter) => {
   const file1 = transformStringToData(filepath1);
   const file2 = transformStringToData(filepath2);
 
@@ -39,9 +40,12 @@ const compareTwoFiles = (filepath1, filepath2, formatter) => {
     case 'stylish':
       console.log(stylish(filesData));
       return stylish(filesData);
+    case 'plain':
+      console.log(plain(filesData));
+      return plain(filesData);
     default:
       throw new Error(`"${formatter}" is unsupported formatter`);
   }
 };
 
-export default compareTwoFiles;
+export default gendiff;

@@ -1,8 +1,10 @@
 import { test, expect, beforeAll } from '@jest/globals';
-import compareTwoFiles from '../src/genDiff.js';
+import gendiff from '../src/genDiff.js';
 
-let jsonFile1; let jsonFile2; let yamlFile1; let
-  yamlFile2;
+let jsonFile1;
+let jsonFile2;
+let yamlFile1;
+let yamlFile2;
 
 beforeAll(() => {
   jsonFile1 = '__fixtures__/file1.json';
@@ -12,19 +14,21 @@ beforeAll(() => {
 });
 
 test('if argument file is doesnt exist', () => {
-  expect(() => compareTwoFiles(jsonFile1, '__fixtures__/file2222.json').toThrow('File is not found: __fixtures__/file2222.json'));
+  expect(() =>
+    gendiff(jsonFile1, '__fixtures__/file2222.json').toThrow('File is not found: __fixtures__/file2222.json'),
+  );
 });
 
 test('if file extension is unsupported', () => {
-  expect(() => compareTwoFiles('__fixtures__/file1.js', jsonFile2).toThrow('".js" is unsupported extension'));
+  expect(() => gendiff('__fixtures__/file1.js', jsonFile2).toThrow('".js" is unsupported extension'));
 });
 
 test('if formatter is unsupported', () => {
-  expect(() => compareTwoFiles(jsonFile1, jsonFile2, 'randomFormatter').toThrow('"randomFormatter" is unsupported formatter'));
+  expect(() => gendiff(jsonFile1, jsonFile2, 'randomFormatter').toThrow('"randomFormatter" is unsupported formatter'));
 });
 
 test('compare nested .json files', () => {
-  expect(compareTwoFiles(jsonFile1, jsonFile2, 'stylish')).toEqual(
+  expect(gendiff(jsonFile1, jsonFile2, 'stylish')).toEqual(
     `{
     common: {
       + follow: false
@@ -73,7 +77,7 @@ test('compare nested .json files', () => {
 });
 
 test('compare nested .yaml files', () => {
-  expect(compareTwoFiles(yamlFile1, yamlFile2, 'stylish')).toEqual(
+  expect(gendiff(yamlFile1, yamlFile2, 'stylish')).toEqual(
     `{
     common: {
       + follow: false
@@ -118,5 +122,21 @@ test('compare nested .yaml files', () => {
         fee: 100500
     }
 }`,
+  );
+});
+
+test('compare nested files by plain formatter', () => {
+  expect(gendiff(jsonFile1, jsonFile2, 'plain')).toEqual(
+    `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`,
   );
 });

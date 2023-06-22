@@ -26,4 +26,4 @@
 - "+" before key means that the second file has this data
 - the absence of the "+" and "-" operators means that the key is present in both files and its value is the same
 
-[![asciicast](https://asciinema.org/a/H2Sfwlo6S2zvuw6oY8Io8HWaK.svg)](https://asciinema.org/a/H2Sfwlo6S2zvuw6oY8Io8HWaK)
+[![asciicast](https://asciinema.org/a/enKPbHLx6PC44D7VAc03kmmw7.svg)](https://asciinema.org/a/enKPbHLx6PC44D7VAc03kmmw7)

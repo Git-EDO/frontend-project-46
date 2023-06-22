@@ -3,10 +3,7 @@ import has from 'lodash/has.js';
 import transformStringToData from './parsers.js';
 import stylish from './stylish.js';
 
-const compareTwoFiles = (filepath1, filepath2) => {
-  const file1 = transformStringToData(filepath1);
-  const file2 = transformStringToData(filepath2);
-
+const getAST = (filedata1, filedata2) => {
   const iter = (data1, data2) => {
     const keys = Array.from(new Set([...Object.keys(data1), ...Object.keys(data2)])).sort();
 
@@ -29,8 +26,22 @@ const compareTwoFiles = (filepath1, filepath2) => {
     });
   };
 
-  console.log(stylish(iter(file1, file2)));
-  return iter(file1, file2);
+  return iter(filedata1, filedata2);
+};
+
+const compareTwoFiles = (filepath1, filepath2, formatter) => {
+  const file1 = transformStringToData(filepath1);
+  const file2 = transformStringToData(filepath2);
+
+  const filesData = getAST(file1, file2);
+
+  switch (formatter) {
+    case 'stylish':
+      console.log(stylish(filesData));
+      return stylish(filesData);
+    default:
+      throw new Error(`"${formatter}" is unsupported formatter`);
+  }
 };
 
 export default compareTwoFiles;

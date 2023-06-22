@@ -5,17 +5,17 @@ const stylish = (data, paddingSymbol = ' ', spacesCount = 4) => {
     if (!isObject(value)) {
       return `${value}`;
     }
-    const iter = (data, valueDepth) => {
-      const pad = valueDepth * spacesCount;
-      const curPad = paddingSymbol.repeat(pad);
-      const brackPad = paddingSymbol.repeat(pad - spacesCount);
-      const result = Object.entries(data).reduce((acc, [key, val]) => {
+    const iter = (objData, valueDepth) => {
+      const indent = valueDepth * spacesCount;
+      const currentIndent = paddingSymbol.repeat(indent);
+      const bracketsIndent = paddingSymbol.repeat(indent - spacesCount);
+      const result = Object.entries(objData).reduce((acc, [key, val]) => {
         if (!isObject(val)) {
-          return `${acc}${curPad}${key}: ${val}\n`;
+          return `${acc}${currentIndent}${key}: ${val}\n`;
         }
-        return `${acc}${curPad}${key}: ${iter(val, valueDepth + 1)}\n`;
+        return `${acc}${currentIndent}${key}: ${iter(val, valueDepth + 1)}\n`;
       }, '{\n');
-      return `${result}${brackPad}}`;
+      return `${result}${bracketsIndent}}`;
     };
 
     return iter(value, depth);
@@ -38,10 +38,11 @@ const stylish = (data, paddingSymbol = ' ', spacesCount = 4) => {
           return `${acc}${nestedPadding}${object.key}: ${iter(object.children, depth + 1)}\n`;
         case 'unchanged':
           return `${acc}${nestedPadding}${object.key}: ${stringify(object.value, depth + 1)}\n`;
-        case 'changed':
+        case 'changed': {
           const obj1Value = `${acc}${currentPadding}- ${object.key}: ${stringify(object.values.obj1Value, depth + 1)}`;
           const obj2Value = `${currentPadding}+ ${object.key}: ${stringify(object.values.obj2Value, depth + 1)}`;
           return `${obj1Value}\n${obj2Value}\n`;
+        }
         default:
           throw new Error(`"${object.type}" is unsupported type`);
       }

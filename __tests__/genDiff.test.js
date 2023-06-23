@@ -14,9 +14,7 @@ beforeAll(() => {
 });
 
 test('if argument file is doesnt exist', () => {
-  expect(() =>
-    gendiff(jsonFile1, '__fixtures__/file2222.json').toThrow('File is not found: __fixtures__/file2222.json'),
-  );
+  expect(() => gendiff(jsonFile1, '__fixtures__/file2222.json').toThrow('File is not found: __fixtures__/file2222.json'));
 });
 
 test('if file extension is unsupported', () => {
@@ -138,5 +136,134 @@ Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]`,
+  );
+});
+
+test('compare nested files by json format', () => {
+  expect(gendiff(jsonFile1, jsonFile2, 'json')).toEqual(
+    `[
+  {
+    "key": "common",
+    "type": "nested",
+    "children": [
+      {
+        "key": "follow",
+        "type": "removed",
+        "value": false
+      },
+      {
+        "key": "setting1",
+        "type": "unchanged",
+        "value": "Value 1"
+      },
+      {
+        "key": "setting2",
+        "type": "saved",
+        "value": 200
+      },
+      {
+        "key": "setting3",
+        "type": "changed",
+        "values": {
+          "obj1Value": true,
+          "obj2Value": null
+        }
+      },
+      {
+        "key": "setting4",
+        "type": "removed",
+        "value": "blah blah"
+      },
+      {
+        "key": "setting5",
+        "type": "removed",
+        "value": {
+          "key5": "value5"
+        }
+      },
+      {
+        "key": "setting6",
+        "type": "nested",
+        "children": [
+          {
+            "key": "doge",
+            "type": "nested",
+            "children": [
+              {
+                "key": "wow",
+                "type": "changed",
+                "values": {
+                  "obj1Value": "",
+                  "obj2Value": "so much"
+                }
+              }
+            ]
+          },
+          {
+            "key": "key",
+            "type": "unchanged",
+            "value": "value"
+          },
+          {
+            "key": "ops",
+            "type": "removed",
+            "value": "vops"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "group1",
+    "type": "nested",
+    "children": [
+      {
+        "key": "baz",
+        "type": "changed",
+        "values": {
+          "obj1Value": "bas",
+          "obj2Value": "bars"
+        }
+      },
+      {
+        "key": "foo",
+        "type": "unchanged",
+        "value": "bar"
+      },
+      {
+        "key": "nest",
+        "type": "changed",
+        "values": {
+          "obj1Value": {
+            "key": "value"
+          },
+          "obj2Value": "str"
+        }
+      }
+    ]
+  },
+  {
+    "key": "group2",
+    "type": "saved",
+    "value": {
+      "abc": 12345,
+      "deep": {
+        "id": 45
+      }
+    }
+  },
+  {
+    "key": "group3",
+    "type": "removed",
+    "value": {
+      "deep": {
+        "id": {
+          "number": 45
+        }
+      },
+      "fee": 100500
+    }
+  }
+]`,
   );
 });

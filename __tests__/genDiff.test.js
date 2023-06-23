@@ -1,28 +1,23 @@
 import { test, expect, beforeAll } from '@jest/globals';
 import gendiff from '../src/genDiff.js';
 
-let jsonFile1;
-let jsonFile2;
-let yamlFile1;
-let yamlFile2;
-
-beforeAll(() => {
-  jsonFile1 = '__fixtures__/file1.json';
-  jsonFile2 = '__fixtures__/file2.json';
-  yamlFile1 = '__fixtures__/file1.yaml';
-  yamlFile2 = '__fixtures__/file2.yaml';
-});
+const jsonFile1 = '__fixtures__/file1.json';
+const jsonFile2 = '__fixtures__/file2.json';
+const yamlFile1 = '__fixtures__/file1.yaml';
+const yamlFile2 = '__fixtures__/file2.yaml';
 
 test('if argument file is doesnt exist', () => {
-  expect(() => gendiff(jsonFile1, '__fixtures__/file2222.json').toThrow('File is not found: __fixtures__/file2222.json'));
+  expect(() => gendiff(jsonFile1, '__fixtures__/file2222.json')).toThrow(
+    'File is not found: __fixtures__/file2222.json',
+  );
 });
 
 test('if file extension is unsupported', () => {
-  expect(() => gendiff('__fixtures__/file1.js', jsonFile2).toThrow('".js" is unsupported extension'));
+  expect(() => gendiff('__fixtures__/file1.js', jsonFile2)).toThrow('".js" is unsupported extension');
 });
 
 test('if formatter is unsupported', () => {
-  expect(() => gendiff(jsonFile1, jsonFile2, 'randomFormatter').toThrow('"randomFormatter" is unsupported formatter'));
+  expect(() => gendiff(jsonFile1, jsonFile2, 'randomFormatter')).toThrow('"randomFormatter" is unsupported formatter');
 });
 
 test('compare nested .json files', () => {

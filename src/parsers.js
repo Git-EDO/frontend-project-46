@@ -17,7 +17,8 @@ const transformStringToData = (filepath) => {
   switch (extension) {
     case '.json':
       return JSON.parse(getFileDataAsString(filepath));
-    case '.yaml' || '.yml':
+    case '.yaml':
+    case '.yml':
       return yaml.load(getFileDataAsString(filepath));
     default:
       throw new Error(`"${extension}" is unsupported extension`);

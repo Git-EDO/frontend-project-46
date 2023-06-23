@@ -27,3 +27,11 @@
 - the absence of the "+" and "-" operators means that the key is present in both files and its value is the same
 
 [![asciicast](https://asciinema.org/a/enKPbHLx6PC44D7VAc03kmmw7.svg)](https://asciinema.org/a/enKPbHLx6PC44D7VAc03kmmw7)
+
+## Multiply formats
+
+- _**gendiff filepath1 filepath2**_ to get data in pseudo-json as default
+- _**gendiff filepath1 filepath2 -f plain**_ to get data in plain format
+- _**gendiff filepath1 filepath2 -f json**_ to get data in json format
+
+[![asciicast](https://asciinema.org/a/hMD1jDyqXL2ylLhcUoy0iwtst.svg)](https://asciinema.org/a/hMD1jDyqXL2ylLhcUoy0iwtst)

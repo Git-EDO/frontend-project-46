@@ -2,15 +2,15 @@
   "name": "@hexlet/code",
   "type": "module",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/Git-EDO/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/Git-EDO/frontend-project-46/actions)",
-  "main": "index.js",
+  "description": "Program to show difference between 2 files in different formats",
+  "main": "src/genDiff.js",
   "scripts": {
     "test": "jest"
   },
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
-  "author": "",
+  "author": "Dmitry Ezhov",
   "license": "ISC",
   "dependencies": {
     "commander": "^10.0.1",

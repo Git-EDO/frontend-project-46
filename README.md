@@ -32,5 +32,6 @@
 
 - _**gendiff filepath1 filepath2**_ to get data in pseudo-json as default
 - _**gendiff filepath1 filepath2 -f plain**_ to get data in plain format
+- _**gendiff filepath1 filepath2 -f json**_ to get data in json format
 
-[![asciicast](https://asciinema.org/a/wOm0MlFA6BWoXEMzqYazeTYjB.svg)](https://asciinema.org/a/wOm0MlFA6BWoXEMzqYazeTYjB)
+[![asciicast](https://asciinema.org/a/hMD1jDyqXL2ylLhcUoy0iwtst.svg)](https://asciinema.org/a/hMD1jDyqXL2ylLhcUoy0iwtst)

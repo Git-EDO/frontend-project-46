@@ -29,7 +29,7 @@ const getAST = (filedata1, filedata2) => {
   return iter(filedata1, filedata2);
 };
 
-const gendiff = (filepath1, filepath2, formatter) => {
+const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
   const file1 = transformStringToData(filepath1);
   const file2 = transformStringToData(filepath2);
 

@@ -1,4 +1,4 @@
-import { test, expect, beforeAll } from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import gendiff from '../src/genDiff.js';
 
 const jsonFile1 = '__fixtures__/file1.json';

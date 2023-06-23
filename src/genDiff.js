@@ -1,11 +1,13 @@
 import isObject from 'lodash/isObject.js';
 import has from 'lodash/has.js';
+import sortBy from 'lodash/sortBy.js';
+import union from 'lodash/union.js';
 import transformStringToData from './parsers.js';
 import getFormatter from '../formatters/index.js';
 
 const getAST = (filedata1, filedata2) => {
   const iter = (data1, data2) => {
-    const keys = Array.from(new Set([...Object.keys(data1), ...Object.keys(data2)])).sort();
+    const keys = sortBy(union(Object.keys(data1), Object.keys(data2)));
 
     return keys.map((key) => {
       const key1 = data1[key];

@@ -19,4 +19,4 @@ rules:
     - error
     - js: always
   no-unused-vars: ['warn', { 'vars': 'all', 'args': 'after-used', 'ignoreRestSiblings': false }]
-  jest/valid-title: ['error', { 'ignoreTypeOfDescribeName': true }]
+  jest/valid-title: ['error', { ignoreTypeOfDescribeName: true }]

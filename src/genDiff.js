@@ -46,7 +46,6 @@ const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
   const diff = getAST(file1, file2);
   const selectedFormatter = getFormatter(formatter);
 
-  console.log(selectedFormatter(diff));
   return selectedFormatter(diff);
 };
 

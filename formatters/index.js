@@ -1,6 +1,5 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
-import toJson from './toJson.js';
 
 const getFormatter = (formatter) => {
   switch (formatter) {
@@ -9,7 +8,7 @@ const getFormatter = (formatter) => {
     case 'plain':
       return plain;
     case 'json':
-      return toJson;
+      return (data) => JSON.stringify(data);
     default:
       throw new Error(`"${formatter}" is unsupported formatter`);
   }

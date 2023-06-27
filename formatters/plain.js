@@ -1,36 +1,42 @@
 import isObject from 'lodash/isObject.js';
 
+const stringify = (value) => {
+  if (isObject(value)) {
+    return '[complex value]';
+  }
+  if (typeof value === 'string') {
+    return `'${value}'`;
+  }
+  return value;
+};
+
 const plain = (data) => {
-  const normalize = (value) => {
-    if (isObject(value)) {
-      return '[complex value]';
-    }
-    if (typeof value === 'string') {
-      return `'${value}'`;
-    }
-    return value;
-  };
+  const iter = (node, pathArray) =>
+    node
+      .map((change) => {
+        const propertyName = pathArray.length === 0 ? change.key : [...pathArray, change.key].join('.');
+        switch (change.type) {
+          case 'removed':
+            return `Property '${propertyName}' was added with value: ${stringify(change.value)}`;
+          case 'added':
+            return `Property '${propertyName}' was removed`;
+          case 'changed':
+            return `Property '${propertyName}' was updated. From ${stringify(change.value1)} to ${stringify(
+              change.value2,
+            )}`;
+          case 'nested': {
+            return `${iter(change.children, [...pathArray, change.key])}`;
+          }
+          case 'unchanged':
+            return null;
+          default:
+            throw new Error(`"${change.type}" is unsupported type`);
+        }
+      })
+      .filter((change) => change)
+      .join('\n');
 
-  const iter = (objData, pathArray) => objData.reduce((acc, change) => {
-    const propertyName = pathArray.length === 0 ? change.key : [...pathArray, change.key].join('.');
-    switch (change.type) {
-      case 'removed':
-        return `${acc}Property '${propertyName}' was added with value: ${normalize(change.value)}\n`;
-      case 'saved':
-        return `${acc}Property '${propertyName}' was removed\n`;
-      case 'changed':
-        return `${acc}Property '${propertyName}' was updated. From ${normalize(
-          change.values.obj1Value,
-        )} to ${normalize(change.values.obj2Value)}\n`;
-      case 'nested': {
-        return `${acc}${iter(change.children, [...pathArray, change.key])}`;
-      }
-      default:
-        return acc;
-    }
-  }, '');
-
-  return iter(data, []).trim();
+  return iter(data, []);
 };
 
 export default plain;

@@ -1,9 +1,7 @@
 env:
   node: true
 
-plugins:
-  - eslint-plugin-import
-  - eslint-plugin-jest
+plugins: [eslint-plugin-import]
 
 extends:
   - eslint:recommended
@@ -19,4 +17,3 @@ rules:
     - error
     - js: always
   no-unused-vars: ['warn', { 'vars': 'all', 'args': 'after-used', 'ignoreRestSiblings': false }]
-  jest/valid-title: ['error', { ignoreTypeOfDescribeName: true }]

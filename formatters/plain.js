@@ -11,30 +11,30 @@ const stringify = (value) => {
 };
 
 const plain = (data) => {
-  const iter = (node, pathArray) =>
-    node
-      .map((change) => {
-        const propertyName = pathArray.length === 0 ? change.key : [...pathArray, change.key].join('.');
-        switch (change.type) {
-          case 'removed':
-            return `Property '${propertyName}' was added with value: ${stringify(change.value)}`;
-          case 'added':
-            return `Property '${propertyName}' was removed`;
-          case 'changed':
-            return `Property '${propertyName}' was updated. From ${stringify(change.value1)} to ${stringify(
-              change.value2,
-            )}`;
-          case 'nested': {
-            return `${iter(change.children, [...pathArray, change.key])}`;
-          }
-          case 'unchanged':
-            return null;
-          default:
-            throw new Error(`"${change.type}" is unsupported type`);
+  const iter = (node, pathArray) => {
+    const result = node.map((change) => {
+      const propertyName = pathArray.length === 0 ? change.key : [...pathArray, change.key].join('.');
+      switch (change.type) {
+        case 'removed':
+          return `Property '${propertyName}' was added with value: ${stringify(change.value)}`;
+        case 'added':
+          return `Property '${propertyName}' was removed`;
+        case 'changed':
+          return `Property '${propertyName}' was updated. From ${stringify(change.value1)} to ${stringify(
+            change.value2,
+          )}`;
+        case 'nested': {
+          return `${iter(change.children, [...pathArray, change.key])}`;
         }
-      })
-      .filter((change) => change)
-      .join('\n');
+        case 'unchanged':
+          return null;
+        default:
+          throw new Error(`"${change.type}" is unsupported type`);
+      }
+    });
+
+    return result.filter((change) => change).join('\n');
+  };
 
   return iter(data, []);
 };

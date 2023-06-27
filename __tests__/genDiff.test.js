@@ -10,7 +10,7 @@ test.each([
   ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'stylish', '__fixtures__/expected-stylish.txt'],
   ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'plain', '__fixtures__/expected-plain.txt'],
   ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'json', '__fixtures__/expected-json.txt'],
-])('test diff (%#)', (file1, file2, format, expectedFile) => {
+])('test diff %#', (file1, file2, format, expectedFile) => {
   const received = gendiff(file1, file2, format);
 
   const absolutePath = path.resolve(process.cwd(), expectedFile);

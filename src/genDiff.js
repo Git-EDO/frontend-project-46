@@ -4,8 +4,8 @@ import isObject from 'lodash/isObject.js';
 import has from 'lodash/has.js';
 import sortBy from 'lodash/sortBy.js';
 import union from 'lodash/union.js';
-import parser from './parser.js';
 import isEqual from 'lodash/isEqual.js';
+import parser from './parser.js';
 import getFormatter from '../formatters/index.js';
 
 const getAST = (filedata1, filedata2) => {
@@ -23,7 +23,12 @@ const getAST = (filedata1, filedata2) => {
         case isEqual(data1[key], data2[key]):
           return { key, type: 'unchanged', value: data1[key] };
         default:
-          return { key, type: 'changed', value1: data1[key], value2: data2[key] };
+          return {
+            key,
+            type: 'changed',
+            value1: data1[key],
+            value2: data2[key],
+          };
       }
     });
   };

@@ -40,42 +40,41 @@ const stylish = (data) => {
   const paddingSymbol = ' ';
   const spacesCount = 4;
 
-  const iter = (obj, depth) => {
-    const paddingSize = depth * spacesCount;
-    const bracketPadding = paddingSymbol.repeat(paddingSize - spacesCount);
+  const iter = (changesList, depth) => {
+    const bracketPadding = paddingSymbol.repeat(depth * spacesCount - spacesCount);
 
-    const result = obj.reduce((acc, object) => {
-      const padding = paddingSymbol.repeat(paddingSize - getSpecial(object.type).length);
-      switch (object.type) {
+    const result = changesList.flatMap((change) => {
+      const padding = paddingSymbol.repeat(depth * spacesCount - getSpecial(change.type).length);
+      switch (change.type) {
         case 'added':
-          return `${acc}${padding}- ${object.key}: ${stringify(object.value, depth + 1, paddingSymbol, spacesCount)}\n`;
+          return `${padding}- ${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
         case 'removed':
-          return `${acc}${padding}+ ${object.key}: ${stringify(object.value, depth + 1, paddingSymbol, spacesCount)}\n`;
+          return `${padding}+ ${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
         case 'nested':
-          return `${acc}${padding}${object.key}: ${iter(object.children, depth + 1, paddingSymbol, spacesCount)}\n`;
+          return `${padding}${change.key}: ${iter(change.children, depth + 1, paddingSymbol, spacesCount)}`;
         case 'unchanged':
-          return `${acc}${padding}${object.key}: ${stringify(object.value, depth + 1, paddingSymbol, spacesCount)}\n`;
+          return `${padding}${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
         case 'changed': {
-          const obj1Value = `${acc}${padding}- ${object.key}: ${stringify(
-            object.value1,
+          const value1 = `${padding}- ${change.key}: ${stringify(
+            change.value1,
             depth + 1,
             paddingSymbol,
             spacesCount,
           )}`;
-          const obj2Value = `${padding}+ ${object.key}: ${stringify(
-            object.value2,
+          const value2 = `${padding}+ ${change.key}: ${stringify(
+            change.value2,
             depth + 1,
             paddingSymbol,
             spacesCount,
           )}`;
-          return `${obj1Value}\n${obj2Value}\n`;
+          return [value1, value2].join('\n');
         }
         default:
-          throw new Error(`"${object.type}" is unsupported type`);
+          throw new Error(`"${change.type}" is unsupported type`);
       }
-    }, '{\n');
+    });
 
-    return `${result}${bracketPadding}}`;
+    return ['{', ...result, `${bracketPadding}}`].join('\n');
   };
 
   return iter(data, 1);

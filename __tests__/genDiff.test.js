@@ -1,21 +1,47 @@
-import path from 'node:path';
+import path, { dirname } from 'node:path';
+import { fileURLToPath } from 'url';
 import { readFileSync } from 'node:fs';
 import { test, expect } from '@jest/globals';
 import gendiff from '../src/genDiff.js';
 
-test.each([
-  ['__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish', '__fixtures__/expected-stylish.txt'],
-  ['__fixtures__/file1.json', '__fixtures__/file2.json', 'plain', '__fixtures__/expected-plain.txt'],
-  ['__fixtures__/file1.json', '__fixtures__/file2.json', 'json', '__fixtures__/expected-json.txt'],
-  ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'stylish', '__fixtures__/expected-stylish.txt'],
-  ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'plain', '__fixtures__/expected-plain.txt'],
-  ['__fixtures__/file1.yaml', '__fixtures__/file2.yaml', 'json', '__fixtures__/expected-json.txt'],
-])('test diff %#', (file1, file2, format, expectedFile) => {
-  const received = gendiff(file1, file2, format);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
 
-  const absolutePath = path.resolve(process.cwd(), expectedFile);
-  const fileData = readFileSync(absolutePath, 'utf-8');
-  const expected = fileData.toString();
+test.each([
+  [
+    {
+      filepath1: 'file1.json',
+      filepath2: 'file2.json',
+      expectedResult: 'expected-stylish.txt',
+    },
+  ],
+  [{
+    filepath1: 'file1.json', filepath2: 'file2.json', expectedResult: 'expected-plain.txt', formatter: 'plain',
+  }],
+  [{
+    filepath1: 'file1.json', filepath2: 'file2.json', expectedResult: 'expected-json.txt', formatter: 'json',
+  }],
+  [
+    {
+      filepath1: 'file1.yaml',
+      filepath2: 'file2.yaml',
+      expectedResult: 'expected-stylish.txt',
+      formatter: 'stylish',
+    },
+  ],
+  [{
+    filepath1: 'file1.yaml', filepath2: 'file2.yaml', expectedResult: 'expected-plain.txt', formatter: 'plain',
+  }],
+  [{
+    filepath1: 'file1.yaml', filepath2: 'file2.yaml', expectedResult: 'expected-json.txt', formatter: 'json',
+  }],
+])('diff %#', ({
+  filepath1, filepath2, expectedResult, formatter,
+}) => {
+  const received = gendiff(getFixturePath(filepath1), getFixturePath(filepath2), formatter);
+  const expected = readFile(expectedResult);
 
   expect(received).toEqual(expected);
 });

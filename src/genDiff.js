@@ -5,8 +5,8 @@ import has from 'lodash/has.js';
 import sortBy from 'lodash/sortBy.js';
 import union from 'lodash/union.js';
 import isEqual from 'lodash/isEqual.js';
-import parser from './parser.js';
-import getFormatter from '../formatters/index.js';
+import parse from './parser.js';
+import format from './formatters/index.js';
 
 const getAST = (filedata1, filedata2) => {
   const iter = (data1, data2) => {
@@ -36,18 +36,16 @@ const getAST = (filedata1, filedata2) => {
   return iter(filedata1, filedata2);
 };
 
-const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
-  const fileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
-  const extension = (filepath) => path.extname(filepath);
+const getFileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
+const getExtension = (filepath) => path.extname(filepath);
 
-  const file1 = parser(fileData(filepath1), extension(filepath1));
-  const file2 = parser(fileData(filepath2), extension(filepath2));
+const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
+  const file1 = parse(getFileData(filepath1), getExtension(filepath1));
+  const file2 = parse(getFileData(filepath2), getExtension(filepath2));
 
   const diff = getAST(file1, file2);
-  const selectedFormatter = getFormatter(formatter);
 
-  console.log(selectedFormatter(diff));
-  return selectedFormatter(diff);
+  return format(formatter, diff);
 };
 
 export default gendiff;

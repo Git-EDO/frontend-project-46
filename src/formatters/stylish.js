@@ -1,5 +1,8 @@
 import isObject from 'lodash/isObject.js';
 
+const paddingSymbol = ' ';
+const spacesCount = 4;
+
 const stringify = (value, depth, symbol, space) => {
   if (!isObject(value)) {
     return `${value}`;
@@ -37,9 +40,6 @@ const getSpecial = (type) => {
 };
 
 const stylish = (data) => {
-  const paddingSymbol = ' ';
-  const spacesCount = 4;
-
   const iter = (changesList, depth) => {
     const bracketPadding = paddingSymbol.repeat(depth * spacesCount - spacesCount);
 

@@ -16,7 +16,6 @@ program
     const options = program.opts();
     const result = gendiff(filepath1, filepath2, options.format);
     console.log(result);
-    return result;
   });
 
 program.parse();

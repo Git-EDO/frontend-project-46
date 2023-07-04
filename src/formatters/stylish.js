@@ -8,21 +8,17 @@ const stringify = (value, depth) => {
   if (!isObject(value)) {
     return `${value}`;
   }
-  const iter = (objData, valueDepth) => {
-    const indent = getPadding(valueDepth);
-    const result = Object.entries(objData)
-      .map(([key, val]) => {
-        if (!isObject(val)) {
-          return `${indent}${key}: ${val}`;
-        }
-        return `${indent}${key}: ${iter(val, valueDepth + 1)}`;
-      })
-      .join('\n');
+  const indent = getPadding(depth);
+  const result = Object.entries(value)
+    .map(([key, val]) => {
+      if (!isObject(val)) {
+        return `${indent}${key}: ${val}`;
+      }
+      return `${indent}${key}: ${stringify(val, depth + 1)}`;
+    })
+    .join('\n');
 
-    return `{\n${result}\n${getPadding(valueDepth, spacesCount)}}`;
-  };
-
-  return iter(value, depth);
+  return `{\n${result}\n${getPadding(depth, spacesCount)}}`;
 };
 
 const stylish = (data) => {

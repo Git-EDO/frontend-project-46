@@ -29,8 +29,8 @@ const stylish = (data) => {
   const iter = (changesList, depth) => {
     const result = changesList
       .flatMap((change) => {
-        const specialSymbolLength = 2;
-        const padding = getPadding(depth, specialSymbolLength);
+        const typeSymbolLength = 2;
+        const padding = getPadding(depth, typeSymbolLength);
         switch (change.type) {
           case 'added':
             return `${padding}- ${change.key}: ${stringify(change.value, depth + 1)}`;

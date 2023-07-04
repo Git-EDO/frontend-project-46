@@ -37,11 +37,11 @@ const getAST = (filedata1, filedata2) => {
 };
 
 const getFileData = (filepath) => readFileSync(path.resolve(process.cwd(), filepath), 'utf-8');
-const getExtension = (filepath) => path.extname(filepath);
+const getType = (filepath) => path.extname(filepath).replace('.', '');
 
 const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
-  const file1 = parse(getFileData(filepath1), getExtension(filepath1));
-  const file2 = parse(getFileData(filepath2), getExtension(filepath2));
+  const file1 = parse(getFileData(filepath1), getType(filepath1));
+  const file2 = parse(getFileData(filepath2), getType(filepath2));
 
   const diff = getAST(file1, file2);
 

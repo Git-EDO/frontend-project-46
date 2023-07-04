@@ -2,79 +2,56 @@ import isObject from 'lodash/isObject.js';
 
 const paddingSymbol = ' ';
 const spacesCount = 4;
+const getPadding = (depth, space = 0) => paddingSymbol.repeat(depth * spacesCount - space);
 
-const stringify = (value, depth, symbol, space) => {
+const stringify = (value, depth) => {
   if (!isObject(value)) {
     return `${value}`;
   }
   const iter = (objData, valueDepth) => {
-    const indent = valueDepth * space;
-    const currentIndent = symbol.repeat(indent);
-    const bracketsIndent = symbol.repeat(indent - space);
-    const result = Object.entries(objData).reduce((acc, [key, val]) => {
-      if (!isObject(val)) {
-        return `${acc}${currentIndent}${key}: ${val}\n`;
-      }
-      return `${acc}${currentIndent}${key}: ${iter(val, valueDepth + 1)}\n`;
-    }, '{\n');
-    return `${result}${bracketsIndent}}`;
+    const indent = getPadding(valueDepth);
+    const result = Object.entries(objData)
+      .map(([key, val]) => {
+        if (!isObject(val)) {
+          return `${indent}${key}: ${val}`;
+        }
+        return `${indent}${key}: ${iter(val, valueDepth + 1)}`;
+      })
+      .join('\n');
+
+    return `{\n${result}\n${getPadding(valueDepth, spacesCount)}}`;
   };
 
   return iter(value, depth);
 };
 
-const getSpecial = (type) => {
-  switch (type) {
-    case 'added':
-      return '- ';
-    case 'removed':
-      return '+ ';
-    case 'changed':
-      return '  ';
-    case 'unchanged':
-    case 'nested':
-      return '';
-    default:
-      throw new Error(`"${type}" is unsupported type`);
-  }
-};
-
 const stylish = (data) => {
   const iter = (changesList, depth) => {
-    const bracketPadding = paddingSymbol.repeat(depth * spacesCount - spacesCount);
-
-    const result = changesList.flatMap((change) => {
-      const padding = paddingSymbol.repeat(depth * spacesCount - getSpecial(change.type).length);
-      switch (change.type) {
-        case 'added':
-          return `${padding}- ${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
-        case 'removed':
-          return `${padding}+ ${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
-        case 'nested':
-          return `${padding}${change.key}: ${iter(change.children, depth + 1, paddingSymbol, spacesCount)}`;
-        case 'unchanged':
-          return `${padding}${change.key}: ${stringify(change.value, depth + 1, paddingSymbol, spacesCount)}`;
-        case 'changed': {
-          const value1 = `${padding}- ${change.key}: ${stringify(
-            change.value1,
-            depth + 1,
-            paddingSymbol,
-            spacesCount,
-          )}`;
-          const value2 = `${padding}+ ${change.key}: ${stringify(
-            change.value2,
-            depth + 1,
-            paddingSymbol,
-            spacesCount,
-          )}`;
-          return [value1, value2].join('\n');
+    const result = changesList
+      .flatMap((change) => {
+        const specialSymbolLength = 2;
+        const padding = getPadding(depth, specialSymbolLength);
+        switch (change.type) {
+          case 'added':
+            return `${padding}- ${change.key}: ${stringify(change.value, depth + 1)}`;
+          case 'removed':
+            return `${padding}+ ${change.key}: ${stringify(change.value, depth + 1)}`;
+          case 'nested':
+            return `${padding}  ${change.key}: ${iter(change.children, depth + 1)}`;
+          case 'unchanged':
+            return `${padding}  ${change.key}: ${stringify(change.value, depth + 1)}`;
+          case 'changed': {
+            const value1 = `${padding}- ${change.key}: ${stringify(change.value1, depth + 1)}`;
+            const value2 = `${padding}+ ${change.key}: ${stringify(change.value2, depth + 1)}`;
+            return [value1, value2].join('\n');
+          }
+          default:
+            throw new Error(`"${change.type}" is unsupported type`);
         }
-        default:
-          throw new Error(`"${change.type}" is unsupported type`);
-      }
-    });
+      })
+      .join('\n');
 
-    return ['{', ...result, `${bracketPadding}}`].join('\n');
+    return `{\n${result}\n${getPadding(depth, spacesCount)}}`;
   };
 
   return iter(data, 1);

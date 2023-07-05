@@ -40,10 +40,10 @@ const getFileData = (filepath) => readFileSync(path.resolve(process.cwd(), filep
 const getType = (filepath) => path.extname(filepath).replace('.', '');
 
 const gendiff = (filepath1, filepath2, formatter = 'stylish') => {
-  const file1 = parse(getFileData(filepath1), getType(filepath1));
-  const file2 = parse(getFileData(filepath2), getType(filepath2));
+  const filedata1 = parse(getFileData(filepath1), getType(filepath1));
+  const filedata2 = parse(getFileData(filepath2), getType(filepath2));
 
-  const diff = getAST(file1, file2);
+  const diff = getAST(filedata1, filedata2);
 
   return format(formatter, diff);
 };
